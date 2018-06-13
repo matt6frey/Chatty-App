@@ -52,12 +52,12 @@ class Main extends Component {
 class App extends Component {
   constructor (props) {
     super(props);
-    this.state = { user: 'Anonymous', messages: msg };
+    this.state = { user: 'Anonymous', messages: [] };
     this.addMessage = this.addMessage.bind(this);
     this.Notification = this.Notification.bind(this);
   }
 
-  addMessage (name, msg) {
+  addMessage (name, msg, server = false) {
     // Set to anonynous if name is empty
     if(name === '') { name = "Anonymous" }
     // Add message if message isn't empty
@@ -66,48 +66,45 @@ class App extends Component {
         let messages = this.state.messages;
         messages = messages.concat(newMessage);
         this.setState({messages: messages});
-        this.socket.send(JSON.stringify(newMessage));
+        if(!server) { this.socket.send(JSON.stringify(newMessage)); }
     } else {
       return false;
     }
   };
 
-  Notification (oldName, newName) {
-    // Check for old vs new name, if different: show notification.
-    if(newName !== oldName) {
-    const newMessage = {username: name, content: `${oldName} changed their name to ${newName}.`, type: "incomingNotification"};
+  Notification (oldName, newName, server = false, content = '') {
+    // Check for old vs new name or if it's another user notification: show notification.
+    if(newName !== oldName || server) {
+    const newMessage = (!server) ? { username: newName, content: `${oldName} changed their name to ${newName}.`, type: "incomingNotification"} : {username: newName, content: content, type: "incomingNotification"} ;
     let messages = this.state.messages;
-    this.socket.send(JSON.stringify(newMessage));
     messages = messages.concat(newMessage);
     this.setState({user: newName, messages: messages});
+    //Is it local or remote changes?
+    if (!server) { this.socket.send(JSON.stringify(newMessage)); }
 
     }
   }
 
   componentDidMount() {
     // Connect to WS
+    let Notification = this.Notification;
+    let addMessage = this.addMessage;
     this.socket = new WebSocket('ws:localhost:3001/ws', 'protocolOne');
-    this.socket.onopen = () => {
+    this.socket.onopen = (e) => {
       console.log('Connected To Chatty server');
     }
+    this.socket.addEventListener('message', function (event) {
+      let data = JSON.parse(event.data);
+      if(data.type === "incomingNotification") {
+        Notification('',data.username, true, data.content);
+      } else {
+        addMessage(data.username, data.content, true);
+      }
+
+    });
   }
 
-
   render() {
-    const data = {
-      currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: [
-        {
-          username: "Bob",
-          content: "Has anyone seen my marbles?",
-        },
-        {
-          username: "Anonymous",
-          content: "No, I think you lost them. You lost your marbles Bob. You lost them for good."
-        }
-      ]
-    };
-
     return (
       <div>
         <Nav />

@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 class Chatbar extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
+    // console.log(props);
     let currentUser =  props.user;
     this.state = { user: currentUser, addMessage: props.addMessage, Notification: props.Notification };
   }
@@ -19,8 +19,10 @@ class Chatbar extends Component {
           // get info from Chat Box
           let name = (e.target.className.search('username') != -1) ? e.target.value : e.target.parentNode.children[0].value;
           let msg = (e.target.className.search('message') != -1) ? e.target.value : e.target.parentNode.children[1].value;
+          let msgInput = (e.target.className.search('message') != -1) ? e.target : e.target.parentNode.children[1];
           let type = (name === name) ? "incomingMessage" : "incomingNotification";
           addMessage(name, msg);
+          msgInput.value = '';
         } } }>
         <input className="chatbar-username" placeholder="Your Name (Optional)" defaultValue={ this.state.user } onBlur={
           (e) => { Notification(user, e.target.value); } } />
