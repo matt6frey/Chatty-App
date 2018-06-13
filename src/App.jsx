@@ -12,6 +12,7 @@ class Main extends Component {
   render() {
 
     const makeId = () => {
+      // Need to keep for new msg's
       const vowels = ['a','e','i','o','u'];
       let i = 0;
       let id = '';
@@ -24,6 +25,7 @@ class Main extends Component {
 
     const msgFeed = this.props.messages.map( function (msg) {
       let id = makeId();
+      // Need to reconfigure this.
       if(msg.type === 'incomingNotification') {
         return <div key={id} className="message system">
                 {msg.content}
@@ -85,6 +87,9 @@ class App extends Component {
   componentDidMount() {
     // Connect to WS
     this.socket = new WebSocket('ws:localhost:3001/ws', 'protocolOne');
+    this.socket.onopen = () => {
+      console.log('Connected To Chatty server');
+    }
   }
 
 

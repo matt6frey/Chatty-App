@@ -20,9 +20,14 @@ let newMSG ='';
 wss.on('connection', (ws) => {
   console.log('Client connected');
   ws.onmessage = (e) => {
-    console.log("event: ", e);
-    newMSG = e.data;
-    return newMSG;
+    data = JSON.parse(e.data);
+    //ws.send("Connected to Chatty Server");
+    if(data.type === 'incomingMessage') {
+      console.log(data.username, ` says "${data.content}"`);
+    } else {
+      console.log(data.content);
+    }
+
   };
 
 // Set up a callback for when a client closes the socket. This usually means they closed their browser.
