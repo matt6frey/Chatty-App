@@ -4,7 +4,6 @@ import React, {Component} from 'react';
 class Chatbar extends Component {
   constructor(props) {
     super(props);
-    // console.log(props);
     let currentUser =  props.user;
     this.state = { user: currentUser, addMessage: props.addMessage, Notification: props.Notification };
   }

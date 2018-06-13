@@ -11,27 +11,13 @@ class Main extends Component {
 
   render() {
 
-    const makeId = () => {
-      // Need to keep for new msg's
-      const vowels = ['a','e','i','o','u'];
-      let i = 0;
-      let id = '';
-      while (i < 6) {
-        id += Math.ceil(Math.random()*9).toString() + vowels[Math.ceil(Math.random()*4)];
-        i++;
-      }
-      return id;
-    };
-
     const msgFeed = this.props.messages.map( function (msg) {
-      let id = makeId();
-      // Need to reconfigure this.
       if(msg.type === 'incomingNotification') {
-        return <div key={id} className="message system">
+        return <div key={msg.id} className="message system">
                 {msg.content}
               </div>;
       } else {
-        return <div key={id} className="message">
+        return <div key={msg.id} className="message">
                 <span className="message-username">{msg.username}</span>
                 <span className="message-content">{msg.content}</span>
               </div>;
@@ -47,14 +33,13 @@ class Main extends Component {
   }
 }
 
-
-
 class App extends Component {
   constructor (props) {
     super(props);
     this.state = { user: 'Anonymous', messages: [] };
     this.addMessage = this.addMessage.bind(this);
     this.Notification = this.Notification.bind(this);
+    this.appendContent = this.appendContent.bind(this);
   }
 
   addMessage (name, msg, server = false) {
@@ -63,44 +48,40 @@ class App extends Component {
     // Add message if message isn't empty
     if(msg !== '') {
         const newMessage = {username: name, content: msg, type: "incomingMessage"};
-        let messages = this.state.messages;
-        messages = messages.concat(newMessage);
-        this.setState({messages: messages});
-        if(!server) { this.socket.send(JSON.stringify(newMessage)); }
+        this.socket.send(JSON.stringify(newMessage));
     } else {
       return false;
     }
   };
 
-  Notification (oldName, newName, server = false, content = '') {
+  Notification (oldName, newName) {
     // Check for old vs new name or if it's another user notification: show notification.
-    if(newName !== oldName || server) {
-    const newMessage = (!server) ? { username: newName, content: `${oldName} changed their name to ${newName}.`, type: "incomingNotification"} : {username: newName, content: content, type: "incomingNotification"} ;
-    let messages = this.state.messages;
-    messages = messages.concat(newMessage);
-    this.setState({user: newName, messages: messages});
-    //Is it local or remote changes?
-    if (!server) { this.socket.send(JSON.stringify(newMessage)); }
-
+    if(newName !== oldName) {
+    const newMessage = { username: newName, content: `${oldName} changed their name to ${newName}.`, type: "incomingNotification"};
+    this.setState({ user: newName });
+    this.socket.send(JSON.stringify(newMessage));
     }
+  }
+
+  appendContent (data) {
+    // append action (notification|message) to messages
+    const content = { id:data.id, username: data.username, content: data.content, type: data.type };
+    let messages = this.state.messages;
+    messages = messages.concat(content);
+    this.setState({ messages: messages });
+
   }
 
   componentDidMount() {
     // Connect to WS
-    let Notification = this.Notification;
-    let addMessage = this.addMessage;
+    const appendContent = this.appendContent;
     this.socket = new WebSocket('ws:localhost:3001/ws', 'protocolOne');
     this.socket.onopen = (e) => {
       console.log('Connected To Chatty server');
     }
     this.socket.addEventListener('message', function (event) {
-      let data = JSON.parse(event.data);
-      if(data.type === "incomingNotification") {
-        Notification('',data.username, true, data.content);
-      } else {
-        addMessage(data.username, data.content, true);
-      }
-
+      let data = JSON.parse(event.data); // Make it usable
+      appendContent(data); // Add to messages array.
     });
   }
 
