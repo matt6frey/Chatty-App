@@ -27,7 +27,7 @@ function userCounts() {
 // Assign a color to each user name.
 function chooseColor(pos) {
   const colors = ['darkOrange', 'Thistle', 'DarkSlateBlue', 'orange', 'Plum', 'Purple', 'Violet', 'bloodOrange', 'Orchid', 'Fuchsia', 'Magenta', 'MediumOrchid', 'MediumPurple', 'BlueViolet', 'DarkViolet', 'DarkOrchid', 'DarkMagenta', 'Indigo', 'SlateBlue', 'MediumSlateBlue'];
-  if(pos === colors.length) { pos = 0; }
+  if(pos > colors.length) { pos = pos % colors.length; }
   return colors[pos];
 }
 
@@ -47,7 +47,7 @@ wss.on('connection', (ws) => {
       onlineUsers.push(data.username);
       // console.log(onlineUsers);
     }
-    const color = chooseColor(onlineUsers.indexOf(data.username));
+    const color = chooseColor(onlineUsers.indexOf(data.username)); // Keep User name colors consistent
     const action = Object.assign({}, { id: actionID, color: color, username: data.username, content: data.content, type: data.type });
     if(data.type === 'incomingMessage') {
       console.log(data.username, ` says "${data.content}"`);

@@ -1,35 +1,8 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
 import Nav from './nav.jsx';
-import msg from './messagelist.js';
+import MessageList from './MessageList.jsx';
 import Chatbar from './chatbar.jsx';
-
-class Main extends Component {
-  constructor (props) {
-    super(props);
-  }
-
-  render() {
-    const msgFeed = this.props.messages.map( function (msg) {
-      if(msg.type === 'incomingNotification') {
-        return <div key={msg.id} className="message system">
-                {msg.content}
-              </div>;
-      } else {
-        return <div key={msg.id} className="message">
-                <span className="message-username" style={ { color: msg.color } }>{msg.username}</span>
-                <span className="message-content">{msg.content}</span>
-              </div>;
-      }
-    });
-
-    return (
-      <main className="messages">
-          {msgFeed}
-      </main>
-    );
-  }
-}
 
 class App extends Component {
   constructor (props) {
@@ -56,9 +29,9 @@ class App extends Component {
   Notification (oldName, newName) {
     // Check for old vs new name or if it's another user notification: show notification.
     if(newName !== oldName) {
-    const newMessage = { username: newName, content: `${oldName} changed their name to ${newName}.`, type: "incomingNotification"};
-    this.setState({ user: newName });
-    this.socket.send(JSON.stringify(newMessage));
+      const newMessage = { username: newName, content: `${oldName} changed their name to ${newName}.`, type: "incomingNotification"};
+      this.setState({ user: newName });
+      this.socket.send(JSON.stringify(newMessage));
     }
   }
 
@@ -85,12 +58,11 @@ class App extends Component {
       console.log('Connected To Chatty server');
       const P = new Promise(() => {
         this.socket.send(JSON.stringify({loaded:true}));
-      }).then( (res) => {
-        this.setState(total: res);
-      }
-      );
+      }).then( (total) => {
+        this.setState(total: total);
+      });
 
-    }
+    };
     //When Messages/Actions are sent to server, respond to these events.
     this.socket.addEventListener('message', function (event) {
       let data = JSON.parse(event.data); // Make it usable
@@ -108,7 +80,7 @@ class App extends Component {
     return (
       <div>
         <Nav total={ this.state.total } />
-        <Main messages={ this.state.messages } />
+        <MessageList messages={ this.state.messages } />
         <Chatbar user={ this.state.user } addMessage={ this.addMessage.bind(this) } Notification={ this.Notification.bind(this) } />
       </div>
     );
