@@ -11,7 +11,6 @@ class Main extends Component {
 
   render() {
     const msgFeed = this.props.messages.map( function (msg) {
-      console.log(msg.color);
       if(msg.type === 'incomingNotification') {
         return <div key={msg.id} className="message system">
                 {msg.content}
@@ -73,7 +72,6 @@ class App extends Component {
   }
 
   updateUserCount(count) {
-    console.log("updateUserCount: ", count );
     this.setState({ total: count });
   }
 
@@ -88,7 +86,6 @@ class App extends Component {
       const P = new Promise(() => {
         this.socket.send(JSON.stringify({loaded:true}));
       }).then( (res) => {
-        console.log(res);
         this.setState(total: res);
       }
       );
