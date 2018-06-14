@@ -15,7 +15,7 @@ This is a real-time messaging APP, much like Skype, Instagram's messenger or Fac
 
 <div>
 <img src="https://github.com/matt6frey/Chatty-App/blob/master/docs/chatty1.png" width="100%" height="auto" style="width: 100%;">
-<img src="https://github.com/matt6frey/Chatty-App/blob/master/docs/chatty1.png" width="100%" height="auto"  style="width:100%;">
+<img src="https://github.com/matt6frey/Chatty-App/blob/master/docs/chatty2.png" width="100%" height="auto"  style="width:100%;">
 </div>
 
 ### Dependencies
