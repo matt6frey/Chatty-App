@@ -24,6 +24,14 @@ function userCounts() {
   });
 }
 
+// Assign a color to each user name.
+function chooseColor(pos) {
+  const colors = ['darkOrange', 'Thistle', 'DarkSlateBlue', 'orange', 'Plum', 'Purple', 'Violet', 'bloodOrange', 'Orchid', 'Fuchsia', 'Magenta', 'MediumOrchid', 'MediumPurple', 'BlueViolet', 'DarkViolet', 'DarkOrchid', 'DarkMagenta', 'Indigo', 'SlateBlue', 'MediumSlateBlue'];
+  if(pos === colors.length) { pos = 0; }
+  return colors[pos];
+}
+
+const onlineUsers = [];
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
@@ -35,8 +43,12 @@ wss.on('connection', (ws) => {
     data = JSON.parse(e.data);
     const actionID = uuid(); // ID for notification or post.
     // New Object with all data updating all feeds.
-    // console.log(totalUsers);
-    const action = Object.assign({}, { id: actionID, username: data.username, content: data.content, type: data.type });
+    if(onlineUsers.indexOf(data.username) < 0) {
+      onlineUsers.push(data.username);
+      // console.log(onlineUsers);
+    }
+    const color = chooseColor(onlineUsers.indexOf(data.username));
+    const action = Object.assign({}, { id: actionID, color: color, username: data.username, content: data.content, type: data.type });
     if(data.type === 'incomingMessage') {
       console.log(data.username, ` says "${data.content}"`);
     } else {

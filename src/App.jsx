@@ -11,13 +11,14 @@ class Main extends Component {
 
   render() {
     const msgFeed = this.props.messages.map( function (msg) {
+      console.log(msg.color);
       if(msg.type === 'incomingNotification') {
         return <div key={msg.id} className="message system">
                 {msg.content}
               </div>;
       } else {
         return <div key={msg.id} className="message">
-                <span className="message-username">{msg.username}</span>
+                <span className="message-username" style={ { color: msg.color } }>{msg.username}</span>
                 <span className="message-content">{msg.content}</span>
               </div>;
       }
@@ -64,7 +65,7 @@ class App extends Component {
 
   appendContent (data) {
     // append action (notification|message) to messages
-    const content = { id:data.id, username: data.username, content: data.content, type: data.type };
+    const content = { id:data.id, username: data.username, content: data.content, type: data.type, color: data.color };
     let messages = this.state.messages;
     messages = messages.concat(content);
     this.setState({ messages: messages });
