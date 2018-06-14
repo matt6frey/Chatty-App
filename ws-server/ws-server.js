@@ -43,11 +43,11 @@ wss.on('connection', (ws) => {
     data = JSON.parse(e.data);
     const actionID = uuid(); // ID for notification or post.
     // New Object with all data updating all feeds.
-    if(onlineUsers.indexOf(data.username) < 0) {
-      onlineUsers.push(data.username);
+    if(onlineUsers.indexOf(ws) < 0) {
+      onlineUsers.push(ws);
       // console.log(onlineUsers);
     }
-    const color = chooseColor(onlineUsers.indexOf(data.username)); // Keep User name colors consistent
+    const color = chooseColor(onlineUsers.indexOf(ws)); // Keep User name colors consistent
     const action = Object.assign({}, { id: actionID, color: color, username: data.username, content: data.content, type: data.type });
     if(data.type === 'incomingMessage') {
       console.log(data.username, ` says "${data.content}"`);
