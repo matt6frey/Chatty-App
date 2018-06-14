@@ -1,45 +1,31 @@
-React Boilerplate
+Chatty App
 =====================
 
-A minimal and light dev environment for ReactJS.
+This is a real-time messaging APP, much like Skype, Instagram's messenger or Facebook's messenger. The message data is not persistent so when the final user leaves the chat room, all of the messages are lost.
 
-### Usage
+### Run the Demo
 
-Clone the boilerplate and create your own git repo.
+1. Fork and Clone this repo.
+2. Run `npm init` in the main directory & ws-server directory.
+3. Run `npm start` in 1 terminal in the main directory & `npm start` in a separate ws-server.
+4. Navigate to `localhost:3000` in 2 separate browsers.
+5. Experiment with Change user names and sending messages.
 
-```
-git clone git@github.com:lighthouse-labs/react-simple-boilerplate.git
-cd react-simple-boilerplate
-git remote rm origin
-git remote add origin [YOUR NEW REPOSITORY]
-# Manually update your package.json file
-```
+### Screenshots
 
-Install the dependencies and start the server.
-
-```
-npm install
-npm start
-open http://localhost:3000
-```
-
-### Static Files
-
-You can store static files like images, fonts, etc in the `build` folder.
-
-For example, if you copy a file called my_image.png into the build folder you can access it using `http://localhost:3000/build/my_image.png`.
-
-### Linting
-
-This boilerplate project includes React ESLint configuration.
-
-```
-npm run lint
-```
+<div>
+<img src="https://github.com/matt6frey/Chatty-App/blob/master/docs/chatty1.png" width="100%" height="auto" style="width: 100%;">
+<img src="https://github.com/matt6frey/Chatty-App/blob/master/docs/chatty1.png" width="100%" height="auto"  style="width:100%;">
+</div>
 
 ### Dependencies
 
+* Express
 * React
-* Webpack
-* [babel-loader](https://github.com/babel/babel-loader)
-* [webpack-dev-server](https://github.com/webpack/webpack-dev-server)
+* React-Dom
+* UUID
+* WS (WebSockets)
+
+### Future Features
+
+* Users can post image URLs into the message box and the feed will display the image.
