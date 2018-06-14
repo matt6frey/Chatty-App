@@ -10,7 +10,6 @@ class Main extends Component {
   }
 
   render() {
-
     const msgFeed = this.props.messages.map( function (msg) {
       if(msg.type === 'incomingNotification') {
         return <div key={msg.id} className="message system">
@@ -24,7 +23,6 @@ class Main extends Component {
       }
     });
 
-
     return (
       <main className="messages">
           {msgFeed}
@@ -36,10 +34,11 @@ class Main extends Component {
 class App extends Component {
   constructor (props) {
     super(props);
-    this.state = { user: 'Anonymous', messages: [] };
+    this.state = { user: 'Anonymous', messages: [], total: 0 };
     this.addMessage = this.addMessage.bind(this);
     this.Notification = this.Notification.bind(this);
     this.appendContent = this.appendContent.bind(this);
+    this.updateUserCount = this.updateUserCount.bind(this);
   }
 
   addMessage (name, msg, server = false) {
@@ -72,23 +71,45 @@ class App extends Component {
 
   }
 
+  updateUserCount(count) {
+    console.log("updateUserCount: ", count );
+    this.setState({ total: count });
+  }
+
   componentDidMount() {
     // Connect to WS
     const appendContent = this.appendContent;
+    const updateUserCount = this.updateUserCount;
+
     this.socket = new WebSocket('ws:localhost:3001/ws', 'protocolOne');
     this.socket.onopen = (e) => {
       console.log('Connected To Chatty server');
+      const P = new Promise(() => {
+        this.socket.send(JSON.stringify({loaded:true}));
+      }).then( (res) => {
+        console.log(res);
+        this.setState(total: res);
+      }
+      );
+
     }
+    //When Messages/Actions are sent to server, respond to these events.
     this.socket.addEventListener('message', function (event) {
       let data = JSON.parse(event.data); // Make it usable
-      appendContent(data); // Add to messages array.
+      if(data.total > 0) {
+        // Update amount of users online.
+        updateUserCount(data.total);
+      } else {
+        // Add to messages array.
+        appendContent(data);
+      }
     });
   }
 
   render() {
     return (
       <div>
-        <Nav />
+        <Nav total={ this.state.total } />
         <Main messages={ this.state.messages } />
         <Chatbar user={ this.state.user } addMessage={ this.addMessage.bind(this) } Notification={ this.Notification.bind(this) } />
       </div>

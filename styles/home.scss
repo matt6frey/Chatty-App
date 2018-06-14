@@ -2,10 +2,6 @@
 
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700");
 @import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css");
-// h1 {
-//   color: tomato;
-// }
-
 
 body {
   background: white;
@@ -79,6 +75,12 @@ body {
   position: fixed;
   right: 0;
   top: 0;
+
+  span {
+    position: absolute;
+    right: 0.5rem;
+    top: 1.2rem;
+  }
 }
 
 .navbar-brand {
@@ -92,3 +94,4 @@ body {
   padding: 0 10px;
   text-decoration: none;
 }
+
