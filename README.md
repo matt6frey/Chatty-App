@@ -7,7 +7,7 @@ This is a real-time messaging APP, much like Skype, Instagram's messenger or Fac
 
 1. Fork and Clone this repo.
 2. Run `npm init` in the main directory & ws-server directory.
-3. Run `npm start` in 1 terminal in the main directory & `npm start` in a separate ws-server.
+3. Run `npm start` in 1 terminal in the main directory & `npm start` in a separate terminal in the ws-server directory.
 4. Navigate to `localhost:3000` in 2 separate browsers.
 5. Experiment with Change user names and sending messages.
 
