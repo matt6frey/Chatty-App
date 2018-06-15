@@ -26,6 +26,6 @@ This is a real-time messaging APP, much like Skype, Instagram's messenger or Fac
 * UUID
 * WS (WebSockets)
 
-### Future Features
+### Future Plans
 
-* Users can post image URLs into the message box and the feed will display the image.
+* Heroku Demo site coming soon!
